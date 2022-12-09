@@ -18,12 +18,6 @@ import requests
 
 app = flask.Flask(__name__)
 
-# come up with a system to combine the month, day, year thing into 1 entry
-# flights = [
-#     {'number': 1, 'month': 12, 'day': 7, 'year': 2022, 'time': 500},
-#     {'number': 167, 'month': 12, 'day': 10, 'year': 2001, 'time': 1700}
-# ]
-
 @app.route('/')
 def home():
     response = requests.get('http://127.0.0.1:5001/flights')
@@ -36,12 +30,14 @@ def home():
     return flask.render_template('home.html', flights=flightList)
 
 # https://stackoverflow.com/questions/11556958/sending-data-from-html-form-to-a-python-script-in-flask
-@app.route('/check_in', methods = ["POST"])
+@app.route('/check_in', methods = ["POST"]) # why dont i need to include the GET method?
 def check_in():
+    # make the post req to update the status on the airline side
     flight_num = int(request.form['flight_number'])
     # make a post to the airline server, give it the id of the flight so we dont need to look through all the flights in the list
     requests.post(url = 'http://127.0.0.1:5001/check_in', data = {"flight_number": flight_num})    
 
+    # make a get req to show the update to the user
     response = requests.get('http://127.0.0.1:5001/flights')
 
     flights = json.loads(response.text)

@@ -4,6 +4,7 @@ import json
 from flask import *
 # memory database:
 # https://flask-caching.readthedocs.io/en/latest/#explicitly-caching-data
+# pip install Flask-Caching
 from flask_caching import Cache
 
 # use a virtual environment when downloading all the libraries
