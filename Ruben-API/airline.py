@@ -27,7 +27,7 @@ flights = { 1: {'number': 1, 'month': 12, 'day': 7, 'year': 2022, 'time': 500, '
 
 cache.set("flights", flights)
 
-@app.route('/check_in')
+@app.route('/check_in', methods=['POST'])
 def check_in():
     print('made it')
     #given the flight number, edit the dictionary entry
