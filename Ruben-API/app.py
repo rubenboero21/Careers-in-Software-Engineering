@@ -26,10 +26,14 @@ app = flask.Flask(__name__)
 
 @app.route('/')
 def home():
-    return flask.render_template('home.html')
+    response = requests.get('http://127.0.0.1:5001/flights')
 
-# copy the below code to make a get request to get the list of all flights instead of using JS
-# (using the requests libe instead of JS)
+    flights = json.loads(response.text)
+    flightList = []
+    for flight in flights:
+        flightList.append({'number': flight['number'], 'status': flight['status']})
+
+    return flask.render_template('home.html', flights=flightList)
 
 # https://stackoverflow.com/questions/11556958/sending-data-from-html-form-to-a-python-script-in-flask
 @app.route('/check_in', methods = ["POST"])
@@ -37,55 +41,15 @@ def check_in():
     flight_num = int(request.form['flight_number'])
     # make a post to the airline server, give it the id of the flight so we dont need to look through all the flights in the list
     requests.post(url = 'http://127.0.0.1:5001/check_in', data = {"flight_number": flight_num})    
-    # flights = airline.flights
-    # for count, flight in enumerate(flights):
-    #     if flight['number'] == flight_num:
-    #         thisDict = airline.flights[count]
-    #         thisDict.update({'status': 'Checked In'})
-    #         airline.flights[count] = thisDict
-    #         print(airline.flights[count])
 
-    return flask.render_template('results.html', flight_num=flight_num)
+    response = requests.get('http://127.0.0.1:5001/flights')
 
-
-    # num = request.form["flight_number"]
-
-# @app.route('/', methods = ["POST", "GET"])
-# def test_post():
-#     if request.method == "POST":
-#         user = request.form["nm"]
-#         return flask.render_template('post.html', usr = user)
-#     else:
-#         return flask.render_template('post.html')
-
-# @app.route("/<usr>")
-# def user(usr):
-#     return f"<h1>{usr}</h1>"
-
-# @app.route('/flights')
-# def get_flights():
-#     flight_list = []
-#     number = flask.request.args.get('number')
-#     month = flask.request.args.get('month')
-#     day = flask.request.args.get('day')
-#     year = flask.request.args.get('year')
-#     time = flask.request.args.get('time')
-#     for flight in flights:
-#         # print(number, flight['number'])
-#         if number is not None and int(number) != flight['number']:
-#             continue
-#         # print(month, flight['month'])
-#         if month is not None and int(month) != flight['month']:
-#             continue
-#         if day is not None and int(day) != flight['day']:
-#             continue
-#         if year is not None and int(year) != flight['year']:
-#             continue
-#         if time is not None and int(time) != flight['time']:
-#             continue
-#         flight_list.append(flight)
-
-#     return json.dumps(flight_list)
+    flights = json.loads(response.text)
+    flightList = []
+    for flight in flights:
+        flightList.append({'number': flight['number'], 'status': flight['status']})
+    # print(flightList)
+    return flask.render_template('results.html', flights=flightList)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser('A sample Flask application/API')

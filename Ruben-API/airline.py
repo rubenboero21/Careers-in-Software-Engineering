@@ -20,10 +20,6 @@ cache = Cache(app)
 
 # come up with a system to combine the month, day, year thing into 1 entry
 # can parse out month/day/year/time in the JS
-# flights = [
-#     {'number': 1, 'month': 12, 'day': 7, 'year': 2022, 'time': 500, 'status': 'Not Checked In'},
-#     {'number': 167, 'month': 12, 'day': 10, 'year': 2001, 'time': 1700, 'status': "Not Checked In"}
-# ]
 
 flights = { 1: {'number': 1, 'month': 12, 'day': 7, 'year': 2022, 'time': 500, 'status': 'Not Checked In'}, 
             167: {'number': 167, 'month': 12, 'day': 10, 'year': 2001, 'time': 1700, 'status': "Not Checked In"}}
@@ -32,57 +28,24 @@ cache.set("flights", flights)
 
 @app.route('/check_in')
 def check_in():
+    print('made it')
     #given the flight number, edit the dictionary entry
     flight_num = int(request.form['flight_number'])
+    print("flight num: ", flight_num)
     flights = cache.get("flights")
     flights[flight_num]['status'] = 'Checked In'
     cache.set("flights", flights)
 
-
-
-
-
-
-
-
-
-@app.route('/', methods = ["POST", "GET"])
-def test_post():
-    if request.method == "POST":
-        user = request.form["nm"]
-        return flask.render_template('post.html', usr = user)
-    else:
-        return flask.render_template('post.html')
-
-@app.route("/<usr>")
-def user(usr):
-    return f"<h1>{usr}</h1>"
+    print(cache)
 
 @app.route('/flights', methods=['GET'])
 def get_flights():
     flight_list = []
-    number = flask.request.args.get('number')
-    month = flask.request.args.get('month')
-    day = flask.request.args.get('day')
-    year = flask.request.args.get('year')
-    time = flask.request.args.get('time')
 
     flights = cache.get("flights")
     
     # read about list comprehension
     flight_list = list(flights.values())
-    # for flight in flights:
-    #     if number is not None and int(number) != flight['number']:
-    #         continue
-    #     if month is not None and int(month) != flight['month']:
-    #         continue
-    #     if day is not None and int(day) != flight['day']:
-    #         continue
-    #     if year is not None and int(year) != flight['year']:
-    #         continue
-    #     if time is not None and int(time) != flight['time']:
-    #         continue
-    #     flight_list.append(flight)
     
     # need to provide a header in the API that allows for CORS
     flight_list = flask.jsonify(flight_list)

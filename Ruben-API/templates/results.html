@@ -4,13 +4,17 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script type = "text/javascript" src = "{{ url_for('static', filename='app.js') }}"></script>
     <title>Check in Results</title>
 </head>
 <body>
     <h1>AutoChecker</h1>
-    <h2>Flight Number {{flight_num}} has been checked in</h2>
     <h2>Your Flights:</h2>
-    <div id = "flights"></div>
+    <div id = "flights">
+        <ul>
+        {% for flight in flights %}
+        <li>Number: {{flight['number']}} | Status: {{flight['status']}}</li>
+        {% endfor %}        
+        </ul>
+    </div>
 </body>
 </html>
