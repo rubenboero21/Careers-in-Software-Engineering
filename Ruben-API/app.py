@@ -11,29 +11,44 @@ import sys
 import argparse
 import flask
 import json
-from flask import request, url_for, redirect
-import airline
+from flask import *
+# import airline
+# pip install requests
+import requests
 
 app = flask.Flask(__name__)
 
 # come up with a system to combine the month, day, year thing into 1 entry
-flights = [
-    {'number': 1, 'month': 12, 'day': 7, 'year': 2022, 'time': 500},
-    {'number': 167, 'month': 12, 'day': 10, 'year': 2001, 'time': 1700}
-]
+# flights = [
+#     {'number': 1, 'month': 12, 'day': 7, 'year': 2022, 'time': 500},
+#     {'number': 167, 'month': 12, 'day': 10, 'year': 2001, 'time': 1700}
+# ]
 
 @app.route('/')
 def home():
-    flights = airline.flights
-    for flight in flights:
-        if flight['number'] == 1:
-            flight['status'] = 'Checked In'
-    print(flights)
     return flask.render_template('home.html')
 
+# copy the below code to make a get request to get the list of all flights instead of using JS
+# (using the requests libe instead of JS)
+
+# https://stackoverflow.com/questions/11556958/sending-data-from-html-form-to-a-python-script-in-flask
 @app.route('/check_in', methods = ["POST"])
 def check_in():
-    num = request.form["flight_number"]
+    flight_num = int(request.form['flight_number'])
+    # make a post to the airline server, give it the id of the flight so we dont need to look through all the flights in the list
+    requests.post(url = 'http://127.0.0.1:5001/check_in', data = {"flight_number": flight_num})    
+    # flights = airline.flights
+    # for count, flight in enumerate(flights):
+    #     if flight['number'] == flight_num:
+    #         thisDict = airline.flights[count]
+    #         thisDict.update({'status': 'Checked In'})
+    #         airline.flights[count] = thisDict
+    #         print(airline.flights[count])
+
+    return flask.render_template('results.html', flight_num=flight_num)
+
+
+    # num = request.form["flight_number"]
 
 # @app.route('/', methods = ["POST", "GET"])
 # def test_post():

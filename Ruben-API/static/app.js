@@ -20,7 +20,7 @@ function loadFlights() {
             flightsList += '<p>' + flight['number'] + ': ' + flight['month'] + '/' + flight['day'] + 
             '/' + flight['year'] + ' @' + flight['time'] + ' | Status: ' + flight['status'] + '</p>'
         }
-
+        
         let selector = document.getElementById('flights');
         if (selector) {
             selector.innerHTML = flightsList;
