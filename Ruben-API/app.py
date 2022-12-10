@@ -43,6 +43,14 @@ def check_in():
     flightsDict = dict(flights)
 
     # get the flight number from the form
+    flight_num = request.form['flight_number']
+
+    # check that the user has input an integer
+    if not flight_num.isdigit():
+        print('invalid input')
+        # provide a better message to the user
+        return redirect('http://127.0.0.1:5000/')
+    
     flight_num = int(request.form['flight_number'])
 
     # only check the flight that matches the number input from the form
@@ -60,7 +68,7 @@ def check_in():
 
     one_day_away = current_time + timedelta(days = 1)
 
-    # if the flight is outside of 24 hours, dont allow check in
+    # only allow check in if flight is within 24 hours
     if flight_time <= one_day_away:
         print('within 24 hrs')
         # make a post to the airline server, give it the id of the flight so we dont need to look through all the flights in the list
