@@ -22,8 +22,11 @@ cache = Cache(app)
 # come up with a system to combine the month, day, year thing into 1 entry
 # can parse out month/day/year/time in the JS
 
-flights = { 1: {'number': 1, 'month': 12, 'day': 7, 'year': 2022, 'time': 500, 'status': 'Not Checked In'}, 
-            167: {'number': 167, 'month': 12, 'day': 10, 'year': 2001, 'time': 1700, 'status': "Not Checked In"}}
+flights = { 1: {'number': 1, 'month': 12, 'day': 7, 'year': 2023, 'time': 500,  
+                'combinedTime': '2023-12-7-5', 'status': 'Not Checked In'}, 
+            167: {'number': 167, 'month': 12, 'day': 10, 'year': 2022, 'time': 1700,
+                'combinedTime': '2022-12-10-17','status': "Not Checked In"}
+          }
 
 cache.set("flights", flights)
 
@@ -32,7 +35,6 @@ def check_in():
     print('made it')
     #given the flight number, edit the dictionary entry
     flight_num = int(request.form['flight_number'])
-    print("flight num: ", flight_num)
     flights = cache.get("flights")
     flights[flight_num]['status'] = 'Checked In'
     cache.set("flights", flights)
@@ -46,7 +48,8 @@ def get_flights():
     flights = cache.get("flights")
     
     # read about list comprehension
-    flight_list = list(flights.values())
+    # flight_list = list(flights.values())
+    flight_list = flights
     
     # need to provide a header in the API that allows for CORS
     flight_list = flask.jsonify(flight_list)
