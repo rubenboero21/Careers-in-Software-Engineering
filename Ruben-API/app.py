@@ -37,7 +37,7 @@ def home():
     return flask.render_template('home.html', flights=flightList)
 
 # https://stackoverflow.com/questions/11556958/sending-data-from-html-form-to-a-python-script-in-flask
-@app.route('/check_in', methods = ["POST"]) # why dont i need to include the GET method?
+@app.route('/check_in', methods = ["POST", "GET"]) # why dont i need to include the GET method?
 def check_in():
 
     # is there a way to only get the flights that match the number instead of getting a list of all flights?
@@ -73,10 +73,13 @@ def check_in():
 
     one_day_away = current_time + timedelta(days = 1)
 
+    # when implementing automation, allow the check in process to occur more than 24 hours out, but 
+    # only start pinging the airline API within 24 hours
     # only allow check in if flight is within 24 hours
-    if flight_time <= one_day_away:
-        # make a post to the airline server, give it the id of the flight so we dont need to look through all the flights in the list
-        requests.post(url = 'http://127.0.0.1:5001/check_in', data = {"flight_number": flight_num})    
+    if flight_time <= one_day_away: 
+        # add the auto retry here
+        # need to come up with a way to know that the flight has been successfully checked in
+        requests.post(url = 'http://127.0.0.1:5001/check_in_eligibility/' + str(flight_num), data = {"flight_number": flight_num})    
 
         # make a get req to show the update to the user
         flightList = getAllFlights('http://127.0.0.1:5001/flights')
