@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Error</title>
+</head>
+<body>
+    <h1>AutoChecker</h1>
+    <h2>
+        {% if timeError is defined %}
+        <p>Flight number {{number}} is not open for registration</p>
+        {% elif inputError is defined%}
+        <p>Your input was invalid, please inlude a valid (integer) flight number</p>
+        {% endif %}
+    </h2>
+    <h2>Your Flights:</h2>
+    <div id = "flights">
+        <ul>
+            {% for flight in flights %}
+            <li>Number: {{flight['number']}} | Status: {{flight['status']}}</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <form action = "http://127.0.0.1:5000/check_in" method = "post">
+        <p>Enter Flight Number:</p>
+        <p><input type = "text" name = "flight_number" /></p>
+        <p><input type = "submit" value = "submit" /></p>
+</body>
+</html>

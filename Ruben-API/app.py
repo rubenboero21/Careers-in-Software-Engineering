@@ -19,15 +19,20 @@ import datetime
 
 app = flask.Flask(__name__)
 
-@app.route('/')
-def home():
-    response = requests.get('http://127.0.0.1:5001/flights')
+def getAllFlights(endpoint):
+    response = requests.get(endpoint)
     flights = json.loads(response.text)
     flightsDict = dict(flights)
     flightList = []
     
     for flight in flightsDict:
         flightList.append({'number': flightsDict[flight]['number'], 'status': flightsDict[flight]['status']})
+
+    return flightList
+
+@app.route('/')
+def home():
+    flightList = getAllFlights('http://127.0.0.1:5001/flights')
 
     return flask.render_template('home.html', flights=flightList)
 
@@ -46,10 +51,10 @@ def check_in():
     flight_num = request.form['flight_number']
 
     # check that the user has input an integer
-    if not flight_num.isdigit():
-        print('invalid input')
-        # provide a better message to the user
-        return redirect('http://127.0.0.1:5000/')
+    if not flight_num.isdigit():  
+        flightList = getAllFlights('http://127.0.0.1:5001/flights')
+     
+        return flask.render_template('error.html', inputError=True, flights=flightList)
     
     flight_num = int(request.form['flight_number'])
 
@@ -70,23 +75,17 @@ def check_in():
 
     # only allow check in if flight is within 24 hours
     if flight_time <= one_day_away:
-        print('within 24 hrs')
         # make a post to the airline server, give it the id of the flight so we dont need to look through all the flights in the list
         requests.post(url = 'http://127.0.0.1:5001/check_in', data = {"flight_number": flight_num})    
 
         # make a get req to show the update to the user
-        response = requests.get('http://127.0.0.1:5001/flights')
-
-        flights = json.loads(response.text)
-        flightsDict = dict(flights)
-        flightList = []
-        for flight in flightsDict:
-            flightList.append({'number': flightsDict[flight]['number'], 'status': flightsDict[flight]['status']})
+        flightList = getAllFlights('http://127.0.0.1:5001/flights')
+        
         return flask.render_template('results.html', flights=flightList)
     else:
-        print('outside of 24 hours')
-        # provide a better message to the user
-        return redirect('http://127.0.0.1:5000/')
+        flightList = getAllFlights('http://127.0.0.1:5001/flights')
+
+        return flask.render_template('error.html', timeError=True, number=flight_num, flights=flightList)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser('A sample Flask application/API')
