@@ -64,6 +64,8 @@ def get_flights():
 
 # add a route that checks if a flight can be checked in
 # have the auto check in ping this route from the check in route in app.py
+
+# should this route be combined with the /check_in route?
 @app.route('/check_in_eligibility/<flight_number>', methods=['POST'])
 def check_in_eligibility(flight_number):
 

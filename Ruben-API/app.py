@@ -43,6 +43,7 @@ def check_in():
     # is there a way to only get the flights that match the number instead of getting a list of all flights?
     # yes -- optional parameters -- ?number=x
     # DO THIS AFTER CHECK IN LOGIC IS WORKING
+    # or could leave it as is and store the flights in a DB, then query the DB
     response = requests.get('http://127.0.0.1:5001/flights')
     flights = json.loads(response.text)
     flightsDict = dict(flights)
@@ -74,7 +75,7 @@ def check_in():
     one_day_away = current_time + timedelta(days = 1)
 
     # when implementing automation, allow the check in process to occur more than 24 hours out, but 
-    # only start pinging the airline API within 24 hours
+    # only start pinging the airline API within 24 hoursCHECKIN_UNAVAILABLE, CHECKIN_AVAILABLE, or CHECKED_IN
     # only allow check in if flight is within 24 hours
     if flight_time <= one_day_away: 
         # add the auto retry here
