@@ -80,7 +80,7 @@ def check_in():
     if flight_time <= one_day_away: 
         # add the auto retry here
         # need to come up with a way to know that the flight has been successfully checked in
-        requests.post(url = 'http://127.0.0.1:5001/check_in_eligibility/' + str(flight_num), data = {"flight_number": flight_num})    
+        requests.post(url = 'http://127.0.0.1:5001/check_in/'+str(flight_num), data = {"flight_number": flight_num})    
 
         # make a get req to show the update to the user
         flightList = getAllFlights('http://127.0.0.1:5001/flights')
