@@ -58,20 +58,29 @@ def check_in_eligibility(flight_info):
 @app.route('/check_in/<flight_number>', methods=['POST', 'GET'])
 def check_in(flight_number):
     flights = cache.get("flights")
-
-    # check that the flight can be checked in
-    if check_in_eligibility(flights[int(flight_number)]):
-        #given the flight number, edit the dictionary entry
-        flights[int(flight_number)]['status'] = 'Checked In'
-
-        cache.set("flights", flights)
-
-        return 'CHECKED_IN'
-
-    else:
-        return 'CHECKIN_UNAVAILABLE'
+    flight_number = int(flight_number)
+    
+    # if block is needed bc otherwise when the app hits this endpoint to check the status of flight, it will
+    # also try and check the flight in (get and post need to be separate)
+    if flask.request.method == 'GET':
+        if check_in_eligibility(flights[flight_number]):
+            return 'CHECKIN_AVAILABLE'
+        else:
+            return 'CHECKIN_UNAVAILABLE'
     # the automated system can hit this endpoint with a given flight number to determine whether the flight
     # has been checked in -- it can determine whether to wait and try again or stop
+    
+    elif flask.request.method == 'POST':
+        if check_in_eligibility(flights[flight_number]):
+            #given the flight number, edit the dictionary entry
+            flights[int(flight_number)]['status'] = 'Checked In'
+
+            cache.set("flights", flights)
+
+            return 'CHECKED_IN'
+
+        else:
+            return 'CHECKIN_UNAVAILABLE'
 
 @app.route('/flights', methods=['GET'])
 def get_flights():
