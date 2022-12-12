@@ -65,18 +65,20 @@ def get_check_in_status(flight_number):
     flight_number = int(flight_number)
 
     if check_in_eligibility(flights[flight_number]):
-        return make_response('CHECKIN_AVAILABLE')
+        return {'availability_status': 'CHECKIN_AVAILABLE'}
     else:
-        return make_response('CHECKIN_UNAVAILABLE')
+        return {'availability_status': 'CHECKIN_UNAVAILABLE'}
 
 @app.route('/check_in', methods=['POST'])
 def check_in():
     flight_number = int(request.form['flight_number'])
 
-    eligibility = requests.get(url = 'http://127.0.0.1:5001/check_in_status/'+str(flight_number))
-    
-    # find out the real way to access the body of the request instead of using this hacky method
-    if str(eligibility.content) == "b'CHECKIN_AVAILABLE'":
+    eligibility_response = requests.get(url = 'http://127.0.0.1:5001/check_in_status/'+str(flight_number))
+    print('response: ', eligibility_response)
+    eligibility = eligibility_response.json()['availability_status']
+    print(eligibility)
+
+    if eligibility == 'CHECKIN_AVAILABLE':
         print('available')
         flights[int(flight_number)]['status'] = 'Checked In'
 
@@ -84,7 +86,8 @@ def check_in():
 
         return json.dumps({'status': 'succeeded'})
     
-    elif str(eligibility.content) == "b'CHECKIN_UNAVAILABLE'":
+    elif eligibility == 'CHECKIN_UNAVAILABLE':
+        print('unavailable')
         return json.dumps({'status': 'failed'})
 
 @app.route('/flights', methods=['GET'])

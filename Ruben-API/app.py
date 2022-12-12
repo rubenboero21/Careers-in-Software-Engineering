@@ -44,6 +44,8 @@ def check_in():
     # DO THIS AFTER CHECK IN LOGIC IS WORKING
     # or could leave it as is and store the flights in a DB, then query the DB
     response = requests.get('http://127.0.0.1:5001/flights')
+
+    # check that these next 2 lines are needed
     flights = json.loads(response.text)
     flightsDict = dict(flights)
 
@@ -61,10 +63,10 @@ def check_in():
     # when implementing automation, allow the check in process to occur more than 24 hours out, but 
     # only start pinging the airline API within 24 hoursCHECKIN_UNAVAILABLE, CHECKIN_AVAILABLE, or CHECKED_IN
     # only allow check in if flight is within 24 hours
-  
     check_in_response = requests.post(url = 'http://127.0.0.1:5001/check_in', data = {"flight_number": flight_num})    
-    # need to not use this hacky method of parsing out the status
-    if str(check_in_response._content) == str(b'{"status": "succeeded"}'):
+    eligibility = check_in_response.json()['status']
+    
+    if eligibility == 'succeeded':
         return redirect('/')
     
     else:
