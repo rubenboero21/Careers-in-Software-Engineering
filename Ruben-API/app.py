@@ -39,16 +39,6 @@ def home():
 @app.route('/check_in', methods = ["POST", "GET"]) # why dont i need to include the GET method?
 def check_in():
 
-    # is there a way to only get the flights that match the number instead of getting a list of all flights?
-    # yes -- optional parameters -- ?number=x
-    # DO THIS AFTER CHECK IN LOGIC IS WORKING
-    # or could leave it as is and store the flights in a DB, then query the DB
-    response = requests.get('http://127.0.0.1:5001/flights')
-
-    # check that these next 2 lines are needed
-    flights = json.loads(response.text)
-    flightsDict = dict(flights)
-
     # get the flight number from the form
     flight_num = request.form['flight_number']
 
