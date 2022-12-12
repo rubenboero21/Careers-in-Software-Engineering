@@ -30,10 +30,10 @@ cache = Cache(app)
 
 # come up with a system to combine the month, day, year thing into 1 entry
 # can parse out month/day/year/time in the JS
-flights = { 1: {'number': 1, 'month': 12, 'day': 7, 'year': 2023, 'time': 500,  
-                'combinedTime': '2023-12-7-5', 'status': 'Not Checked In'}, 
-            167: {'number': 167, 'month': 12, 'day': 10, 'year': 2022, 'time': 1700,
-                'combinedTime': '2022-12-10-17','status': "Not Checked In"}
+flights = { 1: {'number': 1, 'month': 12, 'day': 13, 'year': 2022, 'time': 500,  
+                'combinedTime': '2022-12-13-11-19', 'status': 'Not Checked In'}, 
+            167: {'number': 167, 'month': 12, 'day': 12, 'year': 2022, 'time': 1700,
+                'combinedTime': '2022-12-10-17-0','status': "Not Checked In"}
           }
 
 cache.set("flights", flights)
@@ -46,8 +46,9 @@ def check_in_eligibility(flight_info):
     month = int(indiv[1])
     day = int(indiv[2])
     hour = int(indiv[3])
+    minute = int(indiv[4])
 
-    flight_time = datetime.datetime(year, month, day, hour)
+    flight_time = datetime.datetime(year, month, day, hour, minute)
     current_time = datetime.datetime.now()
     one_day_away = current_time + timedelta(days = 1)
 
@@ -74,9 +75,7 @@ def check_in():
     flight_number = int(request.form['flight_number'])
 
     eligibility_response = requests.get(url = 'http://127.0.0.1:5001/check_in_status/'+str(flight_number))
-    print('response: ', eligibility_response)
     eligibility = eligibility_response.json()['availability_status']
-    print(eligibility)
 
     if eligibility == 'CHECKIN_AVAILABLE':
         print('available')

@@ -7,6 +7,7 @@ import sys
 import argparse
 import flask
 import json
+import time
 from flask import *
 
 # pip install requests
@@ -63,7 +64,19 @@ def check_in():
     
     else:
         # what actually needs to happen here is to wait, then attempt to check in again
-        print('flight not checked in')
+        print('flight not checked in. checking again in 60 seconds')
+        time.sleep(60)
+
+        while True:
+            print('attempting checkin')
+            check_in_response = requests.post(url = 'http://127.0.0.1:5001/check_in', data = {"flight_number": flight_num})    
+            eligibility = check_in_response.json()['status']
+            if eligibility == 'succeeded':
+                print('successfully checked in')
+                break
+            else:
+                time.sleep(60)
+
         return redirect('/')
 
 if __name__ == '__main__':
