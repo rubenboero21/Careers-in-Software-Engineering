@@ -16,7 +16,6 @@ import requests
 from datetime import datetime, timedelta
 import datetime
 
-
 app = flask.Flask(__name__)
 
 def getAllFlights(endpoint):
@@ -59,45 +58,19 @@ def check_in():
     
     flight_num = int(request.form['flight_number'])
 
-    # only check the flight that matches the number input from the form
-    current_time = datetime.datetime.now()
-
-    flight_time = flightsDict[str(flight_num)]['combinedTime']
-    indiv = flight_time.split('-')
-    year = int(indiv[0])
-    month = int(indiv[1])
-    day = int(indiv[2])
-    hour = int(indiv[3])
-    # can add minutes and seconds later if needed
-
-    flight_time = datetime.datetime(year, month, day, hour)
-
-    one_day_away = current_time + timedelta(days = 1)
-
     # when implementing automation, allow the check in process to occur more than 24 hours out, but 
     # only start pinging the airline API within 24 hoursCHECKIN_UNAVAILABLE, CHECKIN_AVAILABLE, or CHECKED_IN
     # only allow check in if flight is within 24 hours
-    # if flight_time <= one_day_away: 
-        # add the auto retry here
-        # need to come up with a way to know that the flight has been successfully checked in
-
-    # requests.post(url = 'http://127.0.0.1:5001/check_in/'+str(flight_num), data = {"flight_number": flight_num})    
-
-    # check_in_response = requests.post(url = 'http://127.0.0.1:5001/check_in/'+str(flight_num), data = {"flight_number": flight_num})    
+  
     check_in_response = requests.post(url = 'http://127.0.0.1:5001/check_in', data = {"flight_number": flight_num})    
+    # need to not use this hacky method of parsing out the status
+    if str(check_in_response._content) == str(b'{"status": "succeeded"}'):
+        return redirect('/')
     
-    # this response needs to ok if the flight has been checked in, otherwise return not ok
-    print('response: ', check_in_response.ok)
-    # make a get req to show the update to the user
-    # flightList = getAllFlights('http://127.0.0.1:5001/flights')
-    
-    # return flask.render_template('results.html', flights=flightList)
-    return redirect('/')
-    # else:
-    #     # flightList = getAllFlights('http://127.0.0.1:5001/flights')
-
-    #     # return flask.render_template('error.html', timeError=True, number=flight_num, flights=flightList)
-    #     return redirect('/')
+    else:
+        # what actually needs to happen here is to wait, then attempt to check in again
+        print('flight not checked in')
+        return redirect('/')
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser('A sample Flask application/API')
