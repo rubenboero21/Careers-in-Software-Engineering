@@ -38,12 +38,14 @@ def home():
 # https://stackoverflow.com/questions/11556958/sending-data-from-html-form-to-a-python-script-in-flask
 @app.route('/check_in', methods = ["POST", "GET"]) # why dont i need to include the GET method?
 def check_in():
-
     # get the flight number from the form
     flight_num = request.form['flight_number']
 
     # check that the user has input an integer
     if not flight_num.isdigit():  
+        # is there a way to only get the flights that match the number instead of getting a list of all flights?
+        # yes -- optional parameters -- ?number=x
+        # DO THIS AFTER CHECK IN LOGIC IS WORKING
         flightList = getAllFlights('http://127.0.0.1:5001/flights')
      
         return flask.render_template('error.html', inputError=True, flights=flightList)
