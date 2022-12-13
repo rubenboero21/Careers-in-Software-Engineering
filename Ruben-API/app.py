@@ -57,7 +57,6 @@ def check_in():
         return redirect('/')
     
     else:
-        # what actually needs to happen here is to wait, then attempt to check in again
         print('flight not checked in. checking again in 60 seconds')
         time.sleep(60)
 
