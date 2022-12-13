@@ -35,11 +35,9 @@ app = Flask(__name__)
 app.config.from_mapping(config)
 cache = Cache(app)
 
-# come up with a system to combine the month, day, year thing into 1 entry
-flights = { 1: {'number': 1, 'month': 12, 'day': 13, 'year': 2022, 'time': 500,  
-                'combinedTime': '2022-12-13-11-19', 'status': 'Not Checked In'}, 
-            167: {'number': 167, 'month': 12, 'day': 12, 'year': 2022, 'time': 1700,
-                'combinedTime': '2022-12-10-17-0','status': "Not Checked In"}
+# combinedTime is year-month-day-hour-minute
+flights = { 1: {'number': 1,'combinedTime': '2022-12-14-17-39', 'status': 'Not Checked In'}, 
+            167: {'number': 167, 'combinedTime': '2022-12-10-17-0','status': 'Not Checked In'}
           }
 
 cache.set("flights", flights)
@@ -55,6 +53,7 @@ def check_in_eligibility(flight_info):
     minute = int(indiv[4])
 
     flight_time = datetime.datetime(year, month, day, hour, minute)
+
     current_time = datetime.datetime.now()
     one_day_away = current_time + timedelta(days = 1)
 
