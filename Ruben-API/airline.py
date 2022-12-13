@@ -36,7 +36,6 @@ app.config.from_mapping(config)
 cache = Cache(app)
 
 # come up with a system to combine the month, day, year thing into 1 entry
-# can parse out month/day/year/time in the JS
 flights = { 1: {'number': 1, 'month': 12, 'day': 13, 'year': 2022, 'time': 500,  
                 'combinedTime': '2022-12-13-11-19', 'status': 'Not Checked In'}, 
             167: {'number': 167, 'month': 12, 'day': 12, 'year': 2022, 'time': 1700,

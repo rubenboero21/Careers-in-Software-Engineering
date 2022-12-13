@@ -5,7 +5,6 @@
 
     Thanks to David Lonoff for the massive help with this project.
 '''
-import sys
 import argparse
 import flask
 import json
@@ -14,10 +13,6 @@ from flask import *
 
 # pip install requests
 import requests
-
-# how are these 2 import statement different?
-from datetime import datetime, timedelta
-import datetime
 
 app = flask.Flask(__name__)
 
@@ -55,9 +50,6 @@ def check_in():
     
     flight_num = int(request.form['flight_number'])
 
-    # when implementing automation, allow the check in process to occur more than 24 hours out, but 
-    # only start pinging the airline API within 24 hoursCHECKIN_UNAVAILABLE, CHECKIN_AVAILABLE, or CHECKED_IN
-    # only allow check in if flight is within 24 hours
     check_in_response = requests.post(url = 'http://127.0.0.1:5001/check_in', data = {"flight_number": flight_num})    
     eligibility = check_in_response.json()['status']
     
