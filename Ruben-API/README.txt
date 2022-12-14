@@ -2,6 +2,7 @@ Setup of virtual environment:
     1. Create the virtual environment
         * python3 -m venv myvenv
             * where myvenv is whatever name you want to give it
+            * using VS Code, select yes in the popup that appears
         * source myvenv/bin/activate
     2. Install the dependencies
         * pip install -r requirements.txt
