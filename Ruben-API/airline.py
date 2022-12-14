@@ -6,9 +6,9 @@
 '''
 
 import argparse
-import flask
 import json
-from flask import *
+import flask
+from flask import Flask, request
 # memory database:
 # https://flask-caching.readthedocs.io/en/latest/#explicitly-caching-data
 # pip install Flask-Caching
@@ -36,7 +36,7 @@ app.config.from_mapping(config)
 cache = Cache(app)
 
 # combinedTime is year-month-day-hour-minute
-flights = { 1: {'number': 1,'combinedTime': '2022-12-14-17-39', 'status': 'Not Checked In'}, 
+flights = { 1: {'number': 1,'combinedTime': '2022-12-15-10-37', 'status': 'Not Checked In'}, 
             167: {'number': 167, 'combinedTime': '2022-12-10-17-0','status': 'Not Checked In'}
           }
 
