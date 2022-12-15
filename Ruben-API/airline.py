@@ -21,8 +21,6 @@ import datetime
 # pip install requests
 import requests
 
-# use a virtual environment when downloading all the libraries
-
 config = {
     "DEBUG": True,          # some Flask specific configs
     "CACHE_TYPE": "SimpleCache",  # Flask-Caching related configs
@@ -35,15 +33,15 @@ app = Flask(__name__)
 app.config.from_mapping(config)
 cache = Cache(app)
 
-# combinedTime is year-month-day-hour-minute
-flights = { 1: {'number': 1,'combinedTime': '2022-12-15-10-37', 'status': 'Not Checked In'}, 
-            167: {'number': 167, 'combinedTime': '2022-12-10-17-0','status': 'Not Checked In'}
+# combined_time is year-month-day-hour-minute
+flights = { 1: {'number': 1,'combined_time': '2022-12-15-10-37', 'status': 'Not Checked In'}, 
+            167: {'number': 167, 'combined_time': '2022-12-10-17-0','status': 'Not Checked In'}
           }
 
 cache.set("flights", flights)
 
 def check_in_eligibility(flight_info):
-    flight_time = flight_info['combinedTime']
+    flight_time = flight_info['combined_time']
     
     indiv = flight_time.split('-')
     year = int(indiv[0])
