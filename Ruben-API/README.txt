@@ -7,7 +7,7 @@ Setup of virtual environment:
     2. Install the dependencies
         * pip install -r requirements.txt
     3. To view all the libraries installed in the virtual environment, type 'pip freeze' into the terminal
-    3. When finished with the virtual environment, type 'deactivate' into the terminal
+    4. When finished with the virtual environment, type 'deactivate' into the terminal
 
 Get the flask server running:
     1. Navigate to the directory that contains the flask app
