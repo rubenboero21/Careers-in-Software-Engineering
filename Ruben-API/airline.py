@@ -52,6 +52,7 @@ def check_in_eligibility(flight_info):
     current_time = datetime.datetime.now()
     one_day_away = current_time + timedelta(days = 1)
 
+    # right now, a flight can be checked in as long as its 24 hours away or less
     if flight_time <= one_day_away:
         # check in allowed
         return True
