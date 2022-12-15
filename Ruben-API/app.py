@@ -17,12 +17,12 @@ def home():
 
     return flask.render_template('home.html', flights=flightList)
 
-@app.route('/check_in', methods = ["POST", "GET"]) # why dont i need to include the GET method?
+@app.route('/check_in', methods = ["POST"])
 def check_in():
     return airline_client.check_in_flight()
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser('A sample Flask application/API')
+    parser = argparse.ArgumentParser('A basic automatic checkin application')
     parser.add_argument('host', help='the host on which this application is running')
     parser.add_argument('port', type=int, help='the port on which this application is listening')
     arguments = parser.parse_args()

@@ -11,14 +11,11 @@ import flask
 from flask import Flask, request
 # memory database:
 # https://flask-caching.readthedocs.io/en/latest/#explicitly-caching-data
-# pip install Flask-Caching
 from flask_caching import Cache
 
-# how are these 2 import statement different?
 from datetime import datetime, timedelta
 import datetime
 
-# pip install requests
 import requests
 
 config = {
@@ -63,8 +60,8 @@ def check_in_eligibility(flight_info):
         return False
 
 @app.route('/check_in_status/<flight_number>', methods=['GET'])
+# check the date for eligibility and return CHECKIN_AVAILABLE etc but don't actually check in
 def get_check_in_status(flight_number):
-    # check the date for eligibility and return CHECKIN_AVAILABLE etc but don't actually check in
     flights = cache.get("flights")
     flight_number = int(flight_number)
 
@@ -74,6 +71,7 @@ def get_check_in_status(flight_number):
         return {'availability_status': 'CHECKIN_UNAVAILABLE'}
 
 @app.route('/check_in', methods=['POST'])
+# check in the flight if it can be checked in
 def check_in():
     flight_number = int(request.form['flight_number'])
 
@@ -94,12 +92,7 @@ def check_in():
 
 @app.route('/flights', methods=['GET'])
 def get_flights():
-    flight_list = []
-
-    flights = cache.get("flights")
-    
-    # read about list comprehension
-    flight_list = flights
+    flight_list = cache.get("flights")
     
     # need to provide a header in the API that allows for CORS
     flight_list = flask.jsonify(flight_list)
@@ -108,7 +101,7 @@ def get_flights():
     return flight_list
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser('A sample Flask application/API')
+    parser = argparse.ArgumentParser('A mock airline API')
     parser.add_argument('host', help='the host on which this application is running')
     parser.add_argument('port', type=int, help='the port on which this application is listening')
     arguments = parser.parse_args()
